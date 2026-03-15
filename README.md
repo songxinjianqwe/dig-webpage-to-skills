@@ -36,6 +36,35 @@ Claude will:
 4. Identify the target API, analyze parameters and auth
 5. Generate a Python script + skill, then verify with real data
 
+## Helper scripts
+
+### `har_preprocessor.py`
+
+Filters and groups requests from a `.har` file into a compact JSON structure for Claude to analyze.
+
+```bash
+python skills/dig-webpage/har_preprocessor.py export.har
+# outputs: /tmp/export_preprocessed.json
+```
+
+### `mcp_preprocessor.py`
+
+Two-stage preprocessor for MCP live capture mode. Keeps Claude's context lean by offloading all filtering and grouping to Python.
+
+**Stage 1** — filter candidate reqids from the request summary list (written by Claude as JSON after `list_network_requests`):
+
+```bash
+python skills/dig-webpage/mcp_preprocessor.py filter mcp_list.json
+# outputs: /tmp/mcp_candidate_reqids.json  →  [12, 34, 56, ...]
+```
+
+**Stage 2** — process full request details (collected by Claude via `get_network_request`) into the same compact format as `har_preprocessor.py`:
+
+```bash
+python skills/dig-webpage/mcp_preprocessor.py process mcp_details.json
+# outputs: /tmp/mcp_requests_preprocessed.json  →  { "summary": [...], "details": {...} }
+```
+
 ## Requirements
 
 - Python 3 (for HAR mode and generated scripts)

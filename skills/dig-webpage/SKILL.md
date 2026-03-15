@@ -53,24 +53,44 @@ list_network_requests()
 
 获取本次会话的全量请求列表（含 reqid、URL、method、状态码、资源类型）。
 
-### 1A-3. 在内存中构建预处理结构
+### 1A-3. 用 Python 脚本预处理请求
 
-对请求列表做与 `har_preprocessor.py` 等价的处理：
+**第一步：将请求列表写成 JSON 文件，筛出候选 reqid**
 
-**过滤噪音**（跳过以下请求）：
-- 资源类型为 `image`、`stylesheet`、`font`、`script`、`media`
-- URL 含 `analytics`、`track`、`beacon`、`collect`、`/log`、`telemetry`、`hotjar`、`gtag`、`sentry`、`pixel` 等
-- 状态码为 0 或无响应体
+`list_network_requests()` 返回结构化数据，直接用 Write 工具将其中每条请求的摘要写成 JSON 数组，保存到临时文件（如 `C:/Temp/mcp_list.json`）：
 
-**按 method + URL path 归组**，同一接口的多次调用归为一组。
+```json
+[
+  {"reqid": 1, "method": "GET", "url": "https://...", "status": 200, "resourceType": "fetch"},
+  {"reqid": 2, "method": "POST", "url": "https://...", "status": 200, "resourceType": "xhr"},
+  ...
+]
+```
 
-对每个候选请求，调用：
+然后运行脚本粗过滤：
+
+```bash
+python "${CLAUDE_SKILL_DIR}/mcp_preprocessor.py" filter "C:/Temp/mcp_list.json"
+# 输出：临时目录下的 mcp_candidate_reqids.json，内容为 [reqid, reqid, ...]
+```
+
+**第二步：批量获取候选请求的完整详情**
+
+读取 `mcp_candidate_reqids.json` 中的 reqid 列表，对每个 reqid 调用：
 ```
 get_network_request(reqid)
 ```
-获取完整的请求 headers、请求体、响应体。
+将所有返回结果收集为 JSON 数组，用 Write 工具保存到临时文件（如 `C:/Temp/mcp_details.json`）。
 
-构建与 `har_preprocessor.py` 输出格式一致的内存结构（summary + details），供后续 Steps 3-7 直接使用。
+**第三步：处理详情，生成精简结构**
+
+```bash
+python "${CLAUDE_SKILL_DIR}/mcp_preprocessor.py" process "C:/Temp/mcp_details.json"
+# 输出：临时目录下的 mcp_requests_preprocessed.json
+# 格式与 har_preprocessor.py 完全一致：{ "summary": [...], "details": {...} }
+```
+
+用 Read 工具读取输出文件，供后续 Steps 3-7 使用。
 
 ---
 
