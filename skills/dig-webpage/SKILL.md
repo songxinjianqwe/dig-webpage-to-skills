@@ -57,7 +57,7 @@ list_network_requests()
 
 **第一步：保存原始请求列表，筛出候选 reqid**
 
-用 Write 工具将 `list_network_requests()` 的**原始文本输出**直接保存到临时文件（如 `C:/Temp/mcp_list.txt`），不需要解析或提取任何字段。然后运行脚本粗过滤：
+请求量较少时可以直接肉眼定位目标 reqid，跳过本步骤。请求量较大时，建议先用 Write 工具将 `list_network_requests()` 的**原始文本输出**保存到临时文件（如 `C:/Temp/mcp_list.txt`），再运行脚本粗过滤：
 
 ```bash
 python "${CLAUDE_SKILL_DIR}/mcp_preprocessor.py" filter "C:/Temp/mcp_list.txt"
