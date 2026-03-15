@@ -51,10 +51,10 @@ python skills/dig-webpage/har_preprocessor.py export.har
 
 Two-stage preprocessor for MCP live capture mode. Keeps Claude's context lean by offloading all filtering and grouping to Python.
 
-**Stage 1** — filter candidate reqids from the request summary list (written by Claude as JSON after `list_network_requests`):
+**Stage 1** — filter candidate reqids from the raw text output of `list_network_requests` (Claude saves it as-is with the Write tool, no parsing needed):
 
 ```bash
-python skills/dig-webpage/mcp_preprocessor.py filter mcp_list.json
+python skills/dig-webpage/mcp_preprocessor.py filter mcp_list.txt
 # outputs: /tmp/mcp_candidate_reqids.json  →  [12, 34, 56, ...]
 ```
 

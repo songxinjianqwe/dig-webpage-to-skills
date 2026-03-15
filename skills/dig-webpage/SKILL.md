@@ -55,22 +55,12 @@ list_network_requests()
 
 ### 1A-3. 用 Python 脚本预处理请求
 
-**第一步：将请求列表写成 JSON 文件，筛出候选 reqid**
+**第一步：保存原始请求列表，筛出候选 reqid**
 
-`list_network_requests()` 返回结构化数据，直接用 Write 工具将其中每条请求的摘要写成 JSON 数组，保存到临时文件（如 `C:/Temp/mcp_list.json`）：
-
-```json
-[
-  {"reqid": 1, "method": "GET", "url": "https://...", "status": 200, "resourceType": "fetch"},
-  {"reqid": 2, "method": "POST", "url": "https://...", "status": 200, "resourceType": "xhr"},
-  ...
-]
-```
-
-然后运行脚本粗过滤：
+用 Write 工具将 `list_network_requests()` 的**原始文本输出**直接保存到临时文件（如 `C:/Temp/mcp_list.txt`），不需要解析或提取任何字段。然后运行脚本粗过滤：
 
 ```bash
-python "${CLAUDE_SKILL_DIR}/mcp_preprocessor.py" filter "C:/Temp/mcp_list.json"
+python "${CLAUDE_SKILL_DIR}/mcp_preprocessor.py" filter "C:/Temp/mcp_list.txt"
 # 输出：临时目录下的 mcp_candidate_reqids.json，内容为 [reqid, reqid, ...]
 ```
 
