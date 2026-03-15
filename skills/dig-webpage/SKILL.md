@@ -55,47 +55,24 @@ list_network_requests()
 
 ### 1A-3. 用 Python 脚本预处理请求
 
-**第一步：保存原始请求列表文本到临时文件**
+**第一步：保存原始请求列表，筛出候选 reqid**
 
-⚠️ **即使请求量很少、肉眼已能看出目标接口，也必须执行本步骤**，否则后续 filter/process 脚本无输入可用。
-
-`list_network_requests()` 的输出有两种情况：
-- **输出直接可见**（小请求量）：用 Write 工具将文本直接保存到 `C:/Temp/mcp_list.txt`
-- **输出超大被保存到 tool-results 文件**（返回提示 "Output too large, saved to: <path>"）：需要用 Python 提取文本再保存：
-
-```bash
-python -c "
-import json, sys
-sys.stdout.reconfigure(encoding='utf-8')
-with open(r'<tool-results文件路径>', encoding='utf-8') as f:
-    data = json.load(f)
-text = data[0]['text']
-with open(r'C:/Temp/mcp_list.txt', 'w', encoding='utf-8') as f:
-    f.write(text)
-print('Done, length:', len(text))
-"
-```
-
-**第二步：用 goal 关键词在请求列表中快速定位候选 reqid**
-
-不要直接批量获取所有过滤后的 reqid 详情（可能上百个，非常慢）。先在 `mcp_list.txt` 文本里搜索与 goal 相关的关键词，缩小到少数几个候选：
+用 Write 工具将 `list_network_requests()` 的**原始文本输出**直接保存到临时文件（如 `C:/Temp/mcp_list.txt`），不需要解析或提取任何字段。然后运行脚本粗过滤：
 
 ```bash
 python "${CLAUDE_SKILL_DIR}/mcp_preprocessor.py" filter "C:/Temp/mcp_list.txt"
 # 输出：临时目录下的 mcp_candidate_reqids.json，内容为 [reqid, reqid, ...]
 ```
 
-然后直接在 `mcp_list.txt` 文本中用 Grep 或肉眼搜索与 goal 相关的路径关键词（如 "docs"、"comment"、"list" 等），从候选中进一步筛出 **最相关的 3-10 个 reqid**，只对这些调用 `get_network_request`。
+**第二步：批量获取候选请求的完整详情**
 
-**第三步：获取精选候选请求的完整详情**
-
-对筛出的少数 reqid 调用：
+读取 `mcp_candidate_reqids.json` 中的 reqid 列表，对每个 reqid 调用：
 ```
 get_network_request(reqid)
 ```
 将所有返回结果收集为 JSON 数组，用 Write 工具保存到临时文件（如 `C:/Temp/mcp_details.json`）。
 
-**第四步：处理详情，生成精简结构**
+**第三步：处理详情，生成精简结构**
 
 ```bash
 python "${CLAUDE_SKILL_DIR}/mcp_preprocessor.py" process "C:/Temp/mcp_details.json"
