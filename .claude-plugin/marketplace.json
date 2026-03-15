@@ -1,0 +1,16 @@
+{
+  "name": "songxinjianqwe-dig-webpage-to-skills",
+  "version": "1.0.0",
+  "description": "Automatically discover HTTP APIs from web pages and generate reusable Claude Code skills.",
+  "owner": {
+    "name": "Jasper Song",
+    "email": "songxinjianzx@163.com"
+  },
+  "plugins": [
+    {
+      "name": "dig-webpage-to-skills",
+      "source": "./",
+      "description": "Automatically discover HTTP APIs from web pages, analyze parameters, and generate reusable Python scripts and Claude Code skills."
+    }
+  ]
+}
