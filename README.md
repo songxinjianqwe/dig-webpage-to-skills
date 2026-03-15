@@ -11,8 +11,8 @@ A Claude Code plugin that automatically discovers HTTP APIs from web pages, anal
 ## Installation
 
 ```
-/plugin marketplace add songxinjianqwe/dig-webpage
-/plugin install dig-webpage@songxinjianqwe-dig-webpage
+/plugin marketplace add songxinjianqwe/dig-webpage-to-skills
+/plugin install dig-webpage-to-skills@songxinjianqwe-dig-webpage-to-skills
 ```
 
 This automatically installs the `chrome-devtools-mcp` dependency.

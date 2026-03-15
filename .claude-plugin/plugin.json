@@ -1,12 +1,12 @@
 {
-  "name": "dig-webpage",
+  "name": "dig-webpage-to-skills",
   "version": "1.0.0",
   "description": "Automatically discover HTTP APIs from web pages, analyze parameters, and generate reusable Python scripts and Claude Code skills. Supports MCP live capture (recommended) and HAR file offline analysis.",
   "author": {
     "name": "Jasper Song",
     "url": "https://github.com/songxinjianqwe"
   },
-  "repository": "https://github.com/songxinjianqwe/dig-webpage",
+  "repository": "https://github.com/songxinjianqwe/dig-webpage-to-skills",
   "license": "MIT",
   "mcpServers": {
     "chrome-devtools": {

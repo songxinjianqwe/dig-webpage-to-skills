@@ -2,7 +2,7 @@
 name: dig-webpage
 description: 自动找到目标网页的 HTTP 接口，分析参数，生成可复用的 Python 调用脚本和 Claude Code skill。支持两种模式：MCP 实时抓包（推荐）和 HAR 文件离线分析。
 argument-hint: <url_or_har_file> --goal "目标描述" [--vars "可变参数1" "可变参数2"]
-allowed-tools: Read, Grep, Glob, Bash, Write, Edit, mcp__plugin_dig-webpage_chrome-devtools__navigate_page, mcp__plugin_dig-webpage_chrome-devtools__list_pages, mcp__plugin_dig-webpage_chrome-devtools__take_screenshot, mcp__plugin_dig-webpage_chrome-devtools__list_network_requests, mcp__plugin_dig-webpage_chrome-devtools__get_network_request
+allowed-tools: Read, Grep, Glob, Bash, Write, Edit, mcp__plugin_dig-webpage-to-skills_chrome-devtools__navigate_page, mcp__plugin_dig-webpage-to-skills_chrome-devtools__list_pages, mcp__plugin_dig-webpage-to-skills_chrome-devtools__take_screenshot, mcp__plugin_dig-webpage-to-skills_chrome-devtools__list_network_requests, mcp__plugin_dig-webpage-to-skills_chrome-devtools__get_network_request
 ---
 
 # Dig Webpage: 挖掘网页 HTTP 接口并生成 Skill
